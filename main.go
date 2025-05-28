@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"github.com/swaggo/http-swagger"
 	_ "github.com/swaggo/http-swagger" // swagger embed files
-	_ "github.com/swaggo/swag"        // swagger general
+	_ "github.com/swaggo/swag"         // swagger general
 	// Import the generated docs
 	_ "github.com/PhoenixTech2003/Blogging-Platform-api/docs"
 	"log"
@@ -37,7 +37,7 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	mux := http.NewServeMux()
-	
+
 	// Serve Swagger documentation
 	mux.Handle("/swagger/", httpSwagger.Handler(
 		httpSwagger.URL("http://localhost:8081/swagger/doc.json"), // The url pointing to API definition
