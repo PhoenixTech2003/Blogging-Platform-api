@@ -35,7 +35,7 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(dat)
 }
 
-func main() {
+func main(){
 	mux := http.NewServeMux()
 
 	// Serve Swagger documentation
