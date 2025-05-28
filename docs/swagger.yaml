@@ -1,0 +1,22 @@
+basePath: /
+host: localhost:8081
+info:
+  contact: {}
+  description: A RESTful API for a blogging platform
+  title: Blogging Platform API
+  version: "1.0"
+paths:
+  /:
+    get:
+      description: Returns a hello world message
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Home endpoint
+swagger: "2.0"
