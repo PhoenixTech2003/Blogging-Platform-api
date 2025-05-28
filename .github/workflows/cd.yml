@@ -4,8 +4,9 @@ on:
   push:
     branches: [main]
 
+permissions: write-all
+
 jobs:
-  permissions: write-all
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
