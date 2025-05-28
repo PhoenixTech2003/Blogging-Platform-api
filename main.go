@@ -56,8 +56,3 @@ func main() {
 		log.Fatalf("Failed to start server: %v", err)
 	}
 }
-
-func unused() {
-	// this function does nothing
-	// and is called nowhere
-}
