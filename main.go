@@ -3,8 +3,7 @@ package main
 import (
 	"encoding/json"
 	"github.com/swaggo/http-swagger"
-	_ "github.com/swaggo/http-swagger" // swagger embed files
-	_ "github.com/swaggo/swag"         // swagger general
+	_ "github.com/swaggo/swag" // swagger general
 	// Import the generated docs
 	_ "github.com/PhoenixTech2003/Blogging-Platform-api/docs"
 	"log"
@@ -35,7 +34,7 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(dat)
 }
 
-func main(){
+func main() {
 	mux := http.NewServeMux()
 
 	// Serve Swagger documentation
