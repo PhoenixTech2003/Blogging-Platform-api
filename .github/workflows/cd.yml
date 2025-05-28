@@ -27,3 +27,9 @@ jobs:
             registry: ghcr.io
             username: ${{github.actor}}
             password: ${{secrets.GITHUB_TOKEN}}
+
+      
+      - name: 'Build Blog api Image'
+        run: |
+          docker build . --tag ghcr.io/phoenixtech2003/blogapi:latest
+          docker push ghcr.io/phoenixtech2003/blogapi:latest
