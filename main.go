@@ -2,13 +2,16 @@ package main
 
 import (
 	"encoding/json"
+	"time"
+
 	"github.com/swaggo/http-swagger"
-	_ "github.com/swaggo/http-swagger" // swagger embed files
-	_ "github.com/swaggo/swag"        // swagger general
+	_ "github.com/swaggo/swag" // swagger general
+
 	// Import the generated docs
-	_ "github.com/PhoenixTech2003/Blogging-Platform-api/docs"
 	"log"
 	"net/http"
+
+	_ "github.com/PhoenixTech2003/Blogging-Platform-api/docs"
 )
 
 // @title Blogging Platform API
@@ -32,12 +35,15 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	dat, _ := json.Marshal(response)
-	w.Write(dat)
+	_, err := w.Write(dat)
+	if err != nil {
+		log.Printf("an error occured while writing data %v", err.Error())
+	}
 }
 
 func main() {
 	mux := http.NewServeMux()
-	
+
 	// Serve Swagger documentation
 	mux.Handle("/swagger/", httpSwagger.Handler(
 		httpSwagger.URL("http://localhost:8081/swagger/doc.json"), // The url pointing to API definition
@@ -48,8 +54,9 @@ func main() {
 
 	addr := ":8081"
 	server := http.Server{
-		Handler: mux,
-		Addr:    addr,
+		Handler:           mux,
+		Addr:              addr,
+		ReadHeaderTimeout: 5 * time.Second,
 	}
 	log.Printf("server is listening at http://localhost%v", addr)
 	log.Printf("Swagger UI is available at http://localhost%v/swagger/index.html", addr)
