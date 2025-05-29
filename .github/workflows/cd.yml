@@ -40,5 +40,4 @@ jobs:
         with:
           deploy-hook: ${{ secrets.RENDER_DEPLOY_HOOK }}
           image-url: ghcr.io/phoenixtech2003/blogapi:latest
-          render-api-key: ${{ secrets.RENDER_API_KEY }}
           wait-for-deployment: true
