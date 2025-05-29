@@ -31,10 +31,13 @@ jobs:
 
       
       - name: 'Build Blog api Image'
+        env:
+          deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
         run: |
           docker build . --tag ghcr.io/phoenixtech2003/blogapi:latest
           docker push ghcr.io/phoenixtech2003/blogapi:latest
       
       - name: Deploy to Render
-        run: curl ${{ secrets.RENDER_DEPLOY_HOOK }}
+        run: |
+          curl "$deploy_url"
           
