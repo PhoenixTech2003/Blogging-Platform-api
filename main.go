@@ -31,7 +31,7 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 	response := struct {
 		Message string `json:"message"`
 	}{
-		Message: "Hello world",
+		Message: "Hello chichi",
 	}
 
 	dat, _ := json.Marshal(response)
