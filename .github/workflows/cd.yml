@@ -36,8 +36,5 @@ jobs:
           docker push ghcr.io/phoenixtech2003/blogapi:latest
       
       - name: Deploy to Render
-        uses: gh-actions-workflows/deploy-docker-render@v1.1
-        with:
-          deploy-hook: ${{ secrets.RENDER_DEPLOY_HOOK }}
-          image-url: ghcr.io/phoenixtech2003/blogapi:latest
-          wait-for-deployment: true
+        run: curl ${{ secrets.RENDER_DEPLOY_HOOK }}
+          
