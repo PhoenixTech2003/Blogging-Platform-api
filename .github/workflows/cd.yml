@@ -41,11 +41,11 @@ jobs:
           docker build . --tag ghcr.io/phoenixtech2003/blogapi:latest
           docker push ghcr.io/phoenixtech2003/blogapi:latest
 
-      - name: Change directory to schema
-        run: cd sql/schema
 
       - name: Apply migrations
-        run: goose postgres $DATABASE_URL up
+        run: | 
+          cd sql/schema
+          goose postgres $DATABASE_URL up
 
       
       - name: Deploy to Render
