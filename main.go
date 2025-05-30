@@ -1,14 +1,13 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
 	"time"
 
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
-	"github.com/swaggo/http-swagger"
+	httpSwagger "github.com/swaggo/http-swagger"
 	_ "github.com/swaggo/swag" // swagger general
 
 	// Import the generated docs
@@ -16,6 +15,7 @@ import (
 	"net/http"
 
 	_ "github.com/PhoenixTech2003/Blogging-Platform-api/docs"
+	"github.com/PhoenixTech2003/Blogging-Platform-api/internal/router"
 )
 
 // @title Blogging Platform API
@@ -24,27 +24,6 @@ import (
 // @host localhost:8081
 // @BasePath /
 
-// @Summary Home endpoint
-// @Description Returns a hello world message
-// @Produce json
-// @Success 200 {object} map[string]string
-// @Router / [get]
-func homeHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	response := struct {
-		Message string `json:"message"`
-	}{
-		Message: "Hello chichi",
-	}
-
-	dat, _ := json.Marshal(response)
-	_, err := w.Write(dat)
-	if err != nil {
-		log.Printf("an error occured while writing data %v", err.Error())
-	}
-}
-
 func main() {
 	godotenv.Load()
 	baseURL := os.Getenv("BASE_URL")
@@ -52,11 +31,10 @@ func main() {
 
 	// Serve Swagger documentation
 	mux.Handle("/swagger/", httpSwagger.Handler(
-		httpSwagger.URL(fmt.Sprintf("%v/swagger/doc.json",baseURL)), // The url pointing to API definition
+		httpSwagger.URL(fmt.Sprintf("%v/swagger/doc.json", baseURL)), // The url pointing to API definition
 	))
 
-	// Register handlers
-	mux.HandleFunc("/", homeHandler)
+	mux.Handle("/articles/", http.StripPrefix("/articles", router.ArticleRouter()))
 
 	addr := ":8081"
 	server := http.Server{
