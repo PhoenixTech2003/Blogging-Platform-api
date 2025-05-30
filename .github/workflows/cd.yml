@@ -30,14 +30,12 @@ jobs:
             password: ${{secrets.GITHUB_TOKEN}}
 
       
-      - name: 'Build Blog api Image'
-        env:
-          deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+      - name: 'Build Blog api Image' 
         run: |
           docker build . --tag ghcr.io/phoenixtech2003/blogapi:latest
           docker push ghcr.io/phoenixtech2003/blogapi:latest
       
       - name: Deploy to Render
         run: |
-          echo "$deploy_url"
+          echo ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
           
