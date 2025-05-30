@@ -6,4 +6,4 @@ fi
 
 cd sql/schema
 
-goose postgres $DATABASE_URL up
+goose postgres $DIRECT_URL up

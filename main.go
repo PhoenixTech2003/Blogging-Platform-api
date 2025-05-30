@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"time"
-
+_ "github.com/lib/pq"
 	"github.com/swaggo/http-swagger"
 	_ "github.com/swaggo/swag" // swagger general
 
