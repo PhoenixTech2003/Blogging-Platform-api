@@ -39,5 +39,5 @@ jobs:
       
       - name: Deploy to Render
         run: |
-          curl "$deploy_url"
+          echo "$deploy_url"
           
