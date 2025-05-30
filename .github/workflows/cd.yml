@@ -10,6 +10,9 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
 
+    env: 
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
     steps:
       - name: Check out code
         uses: actions/checkout@v4
@@ -18,6 +21,9 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: "1.24.3"
+
+      - name: Install goose
+        run: go install github.com/pressly/goose/v3/cmd/goose@latest
 
       - name: Build server
         run: scripts/build.sh
@@ -34,6 +40,13 @@ jobs:
         run: |
           docker build . --tag ghcr.io/phoenixtech2003/blogapi:latest
           docker push ghcr.io/phoenixtech2003/blogapi:latest
+
+      - name: Change directory to schema
+        run: cd sql/schema
+
+      - name: Apply migrations
+        run: goose postgres $DATABASE_URL up
+
       
       - name: Deploy to Render
         run: |
