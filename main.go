@@ -2,8 +2,12 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
+	"os"
 	"time"
-_ "github.com/lib/pq"
+
+	"github.com/joho/godotenv"
+	_ "github.com/lib/pq"
 	"github.com/swaggo/http-swagger"
 	_ "github.com/swaggo/swag" // swagger general
 
@@ -42,11 +46,13 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	godotenv.Load()
+	baseURL := os.Getenv("BASE_URL")
 	mux := http.NewServeMux()
 
 	// Serve Swagger documentation
 	mux.Handle("/swagger/", httpSwagger.Handler(
-		httpSwagger.URL("http://localhost:8081/swagger/doc.json"), // The url pointing to API definition
+		httpSwagger.URL(fmt.Sprintf("%v/swagger/doc.json",baseURL)), // The url pointing to API definition
 	))
 
 	// Register handlers
@@ -59,7 +65,7 @@ func main() {
 		ReadHeaderTimeout: 5 * time.Second,
 	}
 	log.Printf("server is listening at http://localhost%v", addr)
-	log.Printf("Swagger UI is available at http://localhost%v/swagger/index.html", addr)
+	log.Printf("Swagger UI is available at %v/swagger/index.html", baseURL)
 	if err := server.ListenAndServe(); err != nil {
 		log.Fatalf("Failed to start server: %v", err)
 	}
