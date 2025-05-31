@@ -41,7 +41,7 @@ const docTemplate = `{
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/handlers.createArticleResponseError"
+                            "$ref": "#/definitions/handlers.responseError"
                         }
                     }
                 }
@@ -79,7 +79,7 @@ const docTemplate = `{
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/handlers.createArticleResponseError"
+                            "$ref": "#/definitions/handlers.responseError"
                         }
                     }
                 }
@@ -93,7 +93,7 @@ const docTemplate = `{
                 "content": {
                     "type": "string"
                 },
-                "createdAt": {
+                "created_at": {
                     "type": "string"
                 },
                 "id": {
@@ -102,7 +102,7 @@ const docTemplate = `{
                 "title": {
                     "type": "string"
                 },
-                "updatedAt": {
+                "updated_at": {
                     "type": "string"
                 }
             }
@@ -138,7 +138,7 @@ const docTemplate = `{
                 }
             }
         },
-        "handlers.createArticleResponseError": {
+        "handlers.responseError": {
             "type": "object",
             "properties": {
                 "message": {

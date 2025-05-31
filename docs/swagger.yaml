@@ -4,13 +4,13 @@ definitions:
     properties:
       content:
         type: string
-      createdAt:
+      created_at:
         type: string
       id:
         type: string
       title:
         type: string
-      updatedAt:
+      updated_at:
         type: string
     type: object
   handlers.createArticleRequestBody:
@@ -33,7 +33,7 @@ definitions:
       updated_at:
         type: string
     type: object
-  handlers.createArticleResponseError:
+  handlers.responseError:
     properties:
       message:
         type: string
@@ -61,7 +61,7 @@ paths:
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/handlers.createArticleResponseError'
+            $ref: '#/definitions/handlers.responseError'
       summary: Gets all articles
       tags:
       - Articles
@@ -86,7 +86,7 @@ paths:
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/handlers.createArticleResponseError'
+            $ref: '#/definitions/handlers.responseError'
       summary: Create a new article
       tags:
       - Articles
