@@ -21,19 +21,19 @@ import (
 // @title Blogging Platform API
 // @version 1.0
 // @description A RESTful API for a blogging platform
-
 // @BasePath /v1/api
 
 func main() {
 	_ = godotenv.Load()
 
 	baseURL := os.Getenv("BASE_URL")
-	if baseURL == "" {
-		baseURL = "localhost:8081" // Default value if not set
+	swaggerHost := os.Getenv("SWAGGER_HOST")
+	if swaggerHost == "" {
+		swaggerHost = "localhost:8081" // Default value if not set
 	}
 
 	// Set Swagger host programmatically
-	docs.SwaggerInfo.Host = baseURL
+	docs.SwaggerInfo.Host = swaggerHost
 
 	mux := http.NewServeMux()
 
