@@ -25,7 +25,6 @@ definitions:
       message:
         type: string
     type: object
-host: localhost:8081
 info:
   contact: {}
   description: A RESTful API for a blogging platform
