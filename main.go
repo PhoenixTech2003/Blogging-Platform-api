@@ -43,7 +43,7 @@ func main() {
 		Addr:              addr,
 		ReadHeaderTimeout: 5 * time.Second,
 	}
-	log.Printf("server is listening at http://localhost%v", addr)
+	log.Printf("server is listening at %v", baseURL)
 	log.Printf("Swagger UI is available at %v/swagger/index.html", baseURL)
 	if err := server.ListenAndServe(); err != nil {
 		log.Fatalf("Failed to start server: %v", err)
