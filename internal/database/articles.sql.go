@@ -40,3 +40,36 @@ func (q *Queries) CreateArticle(ctx context.Context, arg CreateArticleParams) (A
 	)
 	return i, err
 }
+
+const getArticles = `-- name: GetArticles :many
+SELECT id, title, content, created_at, updated_at FROM articles
+`
+
+func (q *Queries) GetArticles(ctx context.Context) ([]Article, error) {
+	rows, err := q.db.QueryContext(ctx, getArticles)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Article
+	for rows.Next() {
+		var i Article
+		if err := rows.Scan(
+			&i.ID,
+			&i.Title,
+			&i.Content,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}

@@ -10,3 +10,6 @@ VALUES
 )
 
 RETURNING *;
+
+-- name: GetArticles :many
+SELECT * FROM articles;
