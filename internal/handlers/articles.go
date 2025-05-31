@@ -16,12 +16,11 @@ type createArticleRequestBody struct {
 }
 
 type createArticleResponseBody struct {
-	ID string `json:"id"`
-	Title string `json:"title"`
-	Content string `json:"content"`
+	ID        string    `json:"id"`
+	Title     string    `json:"title"`
+	Content   string    `json:"content"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
-	
 }
 
 type createArticleResponseError struct {
@@ -41,66 +40,66 @@ type createArticleResponseError struct {
 func (cfg *ApiCfg) CreateArticle(w http.ResponseWriter, r *http.Request) {
 	requestBody := createArticleRequestBody{}
 	decoder := json.NewDecoder(r.Body)
-	
-	err:=decoder.Decode(&requestBody)
+
+	err := decoder.Decode(&requestBody)
 	if err != nil {
 		log.Printf("an error occured while decoding the request: %v", err.Error())
 		errorResponse := createArticleResponseError{
 			Message: "an error occured while creating the post",
 		}
-		dat , err := json.Marshal(errorResponse)
+		dat, err := json.Marshal(errorResponse)
 		if err != nil {
 			log.Fatal("an error occured while marshalling json")
 			return
 		}
-		
-		utils.RespondWithJson(w,dat,http.StatusInternalServerError)
-		
+
+		utils.RespondWithJson(w, dat, http.StatusInternalServerError)
+
 	}
 	createArticleParams := database.CreateArticleParams{
-		Title: requestBody.Title,
+		Title:   requestBody.Title,
 		Content: requestBody.Content,
 	}
-	articleData , err := cfg.db.CreateArticle(r.Context(), createArticleParams)
-		if err != nil {
+	articleData, err := cfg.db.CreateArticle(r.Context(), createArticleParams)
+	if err != nil {
 		log.Printf("an error occured while creating the post: %v", err.Error())
 		errorResponse := createArticleResponseError{
 			Message: "an error occured while creating the post",
 		}
-		dat , err := json.Marshal(errorResponse)
+		dat, err := json.Marshal(errorResponse)
 		if err != nil {
 			log.Fatal("failed to create article")
 			return
 		}
-		
-		utils.RespondWithJson(w,dat,http.StatusInternalServerError)
-		
+
+		utils.RespondWithJson(w, dat, http.StatusInternalServerError)
+
 	}
 
 	responseBody := createArticleResponseBody{
-		ID: articleData.ID.String(),
-		Title: articleData.Title,
-		Content: articleData.Content,
+		ID:        articleData.ID.String(),
+		Title:     articleData.Title,
+		Content:   articleData.Content,
 		CreatedAt: articleData.CreatedAt.Time,
 		UpdatedAt: articleData.UpdatedAt.Time,
 	}
 
 	dat, err := json.Marshal(responseBody)
-		if err != nil {
+	if err != nil {
 		log.Printf("an error occured while marshalling the post: %v", err.Error())
 		errorResponse := createArticleResponseError{
 			Message: "an error occured while creating the post",
 		}
-		dat , err := json.Marshal(errorResponse)
+		dat, err := json.Marshal(errorResponse)
 		if err != nil {
 			log.Fatal("failed to marshal article")
 			return
 		}
-		
-		utils.RespondWithJson(w,dat,http.StatusInternalServerError)
-		
+
+		utils.RespondWithJson(w, dat, http.StatusInternalServerError)
+
 	}
 
-	utils.RespondWithJson(w,dat,http.StatusOK)
+	utils.RespondWithJson(w, dat, http.StatusOK)
 
 }

@@ -9,15 +9,13 @@ import (
 	"github.com/joho/godotenv"
 )
 
-
-type  ApiCfg struct{
+type ApiCfg struct {
 	db *database.Queries
 }
 
 var ApiConfig ApiCfg
-	
 
-func init(){
+func init() {
 	godotenv.Load()
 	dbURL := os.Getenv("DATABASE_URL")
 	db, err := sql.Open("postgres", dbURL)
@@ -26,6 +24,5 @@ func init(){
 		return
 	}
 	ApiConfig.db = database.New(db)
-	
 
 }
