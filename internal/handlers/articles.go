@@ -26,17 +26,15 @@ type createArticleResponseBody struct {
 
 type responseError struct {
 	Message string `json:"message"`
-	
 }
 
 type article struct {
-	ID        string `json:"id"`
-	Title     string `json:"title"`
-	Content   string `json:"content"`
+	ID        string    `json:"id"`
+	Title     string    `json:"title"`
+	Content   string    `json:"content"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
-
 
 // CreateArticle godoc
 // @Summary Create a new article
@@ -51,7 +49,6 @@ type article struct {
 func (cfg *ApiCfg) CreateArticle(w http.ResponseWriter, r *http.Request) {
 	requestBody := createArticleRequestBody{}
 	decoder := json.NewDecoder(r.Body)
-	
 
 	err := decoder.Decode(&requestBody)
 	if err != nil {
@@ -95,7 +92,7 @@ func (cfg *ApiCfg) CreateArticle(w http.ResponseWriter, r *http.Request) {
 		CreatedAt: articleData.CreatedAt.Time,
 		UpdatedAt: articleData.UpdatedAt.Time,
 	}
-	
+
 	dat, err := json.Marshal(responseBody)
 	if err != nil {
 		log.Printf("an error occured while marshalling the post: %v", err.Error())
@@ -113,11 +110,8 @@ func (cfg *ApiCfg) CreateArticle(w http.ResponseWriter, r *http.Request) {
 	}
 
 	utils.RespondWithJson(w, dat, http.StatusOK)
-	
+
 }
-
-
-
 
 // GetArticles godoc
 // @Summary Gets all articles
@@ -128,25 +122,25 @@ func (cfg *ApiCfg) CreateArticle(w http.ResponseWriter, r *http.Request) {
 // @Success 200 {array} article  "All articles"
 // @Failure 500 {object} responseError "Internal Server Error"
 // @Router /articles/ [get]
-func (cfg *ApiCfg) GetArticles(w http.ResponseWriter, r *http.Request){
-	articles := make([]article,0)
-	articlesData , err := cfg.db.GetArticles(r.Context())
-	if err != nil{
+func (cfg *ApiCfg) GetArticles(w http.ResponseWriter, r *http.Request) {
+	articles := make([]article, 0)
+	articlesData, err := cfg.db.GetArticles(r.Context())
+	if err != nil {
 		log.Printf("an error occured while fetching all articles: %v", err.Error())
 		errorResponse := responseError{
 			Message: "an error occured while fetching all articles",
 		}
 		errorData, _ := json.Marshal(errorResponse)
-		utils.RespondWithJson(w,errorData,http.StatusInternalServerError)
+		utils.RespondWithJson(w, errorData, http.StatusInternalServerError)
 		return
 	}
-	
-	for _ , articleData := range articlesData{
-	
+
+	for _, articleData := range articlesData {
+
 		articles = append(articles, article{
-			ID: articleData.ID.String(),
-			Title: articleData.Title,
-			Content: articleData.Content,
+			ID:        articleData.ID.String(),
+			Title:     articleData.Title,
+			Content:   articleData.Content,
 			CreatedAt: articleData.CreatedAt.Time,
 			UpdatedAt: articleData.UpdatedAt.Time,
 		})
@@ -154,17 +148,16 @@ func (cfg *ApiCfg) GetArticles(w http.ResponseWriter, r *http.Request){
 	}
 
 	dat, err := json.Marshal(articles)
-	if err != nil{
+	if err != nil {
 		log.Printf("an error occured while marshalling all articles: %v", err.Error())
 		errorResponse := responseError{
 			Message: "an error occured while fetching all articles",
 		}
 		errorData, _ := json.Marshal(errorResponse)
-		utils.RespondWithJson(w,errorData,http.StatusInternalServerError)
+		utils.RespondWithJson(w, errorData, http.StatusInternalServerError)
 		return
 	}
 
-	utils.RespondWithJson(w,dat,http.StatusOK)
-
+	utils.RespondWithJson(w, dat, http.StatusOK)
 
 }
