@@ -10,6 +10,6 @@ func ArticleRouter() *http.ServeMux {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("POST /", handlers.ApiConfig.CreateArticle)
-
+	mux.HandleFunc("GET /", handlers.ApiConfig.GetArticles)
 	return mux
 }

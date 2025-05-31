@@ -16,6 +16,36 @@ const docTemplate = `{
     "basePath": "{{.BasePath}}",
     "paths": {
         "/articles/": {
+            "get": {
+                "description": "Fetches all blog articles",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Articles"
+                ],
+                "summary": "Gets all articles",
+                "responses": {
+                    "200": {
+                        "description": "All articles",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/handlers.article"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.createArticleResponseError"
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "Create a new article with the provided title and content",
                 "consumes": [
@@ -57,6 +87,26 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "handlers.article": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
         "handlers.createArticleRequestBody": {
             "type": "object",
             "properties": {

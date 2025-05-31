@@ -1,5 +1,18 @@
 basePath: /v1/api
 definitions:
+  handlers.article:
+    properties:
+      content:
+        type: string
+      createdAt:
+        type: string
+      id:
+        type: string
+      title:
+        type: string
+      updatedAt:
+        type: string
+    type: object
   handlers.createArticleRequestBody:
     properties:
       content:
@@ -32,6 +45,26 @@ info:
   version: "1.0"
 paths:
   /articles/:
+    get:
+      consumes:
+      - application/json
+      description: Fetches all blog articles
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: All articles
+          schema:
+            items:
+              $ref: '#/definitions/handlers.article'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.createArticleResponseError'
+      summary: Gets all articles
+      tags:
+      - Articles
     post:
       consumes:
       - application/json

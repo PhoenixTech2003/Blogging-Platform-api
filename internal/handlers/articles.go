@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/PhoenixTech2003/Blogging-Platform-api/internal/database"
+
 	"github.com/PhoenixTech2003/Blogging-Platform-api/internal/utils"
 )
 
@@ -25,7 +26,17 @@ type createArticleResponseBody struct {
 
 type createArticleResponseError struct {
 	Message string `json:"message"`
+	
 }
+
+type article struct {
+	ID        string
+	Title     string
+	Content   string
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}
+
 
 // CreateArticle godoc
 // @Summary Create a new article
@@ -40,6 +51,7 @@ type createArticleResponseError struct {
 func (cfg *ApiCfg) CreateArticle(w http.ResponseWriter, r *http.Request) {
 	requestBody := createArticleRequestBody{}
 	decoder := json.NewDecoder(r.Body)
+	
 
 	err := decoder.Decode(&requestBody)
 	if err != nil {
@@ -83,7 +95,7 @@ func (cfg *ApiCfg) CreateArticle(w http.ResponseWriter, r *http.Request) {
 		CreatedAt: articleData.CreatedAt.Time,
 		UpdatedAt: articleData.UpdatedAt.Time,
 	}
-
+	
 	dat, err := json.Marshal(responseBody)
 	if err != nil {
 		log.Printf("an error occured while marshalling the post: %v", err.Error())
@@ -101,5 +113,21 @@ func (cfg *ApiCfg) CreateArticle(w http.ResponseWriter, r *http.Request) {
 	}
 
 	utils.RespondWithJson(w, dat, http.StatusOK)
+	
+}
+
+
+
+
+// GetArticles godoc
+// @Summary Gets all articles
+// @Description Fetches all blog articles
+// @Tags Articles
+// @Accept json
+// @Produce json
+// @Success 200 {array} article  "All articles"
+// @Failure 500 {object} createArticleResponseError "Internal Server Error"
+// @Router /articles/ [get]
+func (cfg *ApiCfg) GetArticles(w http.ResponseWriter, r *http.Request){
 
 }
