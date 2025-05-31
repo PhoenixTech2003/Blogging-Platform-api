@@ -15,7 +15,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/articles": {
+        "/articles/": {
             "post": {
                 "description": "Create a new article with the provided title and content",
                 "consumes": [
@@ -25,7 +25,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "articles"
+                    "Articles"
                 ],
                 "summary": "Create a new article",
                 "parameters": [
@@ -44,6 +44,12 @@ const docTemplate = `{
                         "description": "Article created",
                         "schema": {
                             "$ref": "#/definitions/handlers.createArticleResponseBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.createArticleResponseError"
                         }
                     }
                 }
@@ -81,6 +87,14 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        },
+        "handlers.createArticleResponseError": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
         }
     }
 }`
@@ -89,7 +103,7 @@ const docTemplate = `{
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
 	Host:             "localhost:8081",
-	BasePath:         "/",
+	BasePath:         "/v1/api",
 	Schemes:          []string{},
 	Title:            "Blogging Platform API",
 	Description:      "A RESTful API for a blogging platform",

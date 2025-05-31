@@ -1,4 +1,4 @@
--- name: createArticle :one
+-- name: CreateArticle :one
 INSERT INTO articles (id, title, content, created_at, updated_at)
 VALUES
 (

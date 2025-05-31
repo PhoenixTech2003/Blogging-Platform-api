@@ -9,7 +9,7 @@ import (
 	"context"
 )
 
-const createArticle = `-- name: createArticle :one
+const createArticle = `-- name: CreateArticle :one
 INSERT INTO articles (id, title, content, created_at, updated_at)
 VALUES
 (
@@ -23,12 +23,12 @@ VALUES
 RETURNING id, title, content, created_at, updated_at
 `
 
-type createArticleParams struct {
+type CreateArticleParams struct {
 	Title   string
 	Content string
 }
 
-func (q *Queries) createArticle(ctx context.Context, arg createArticleParams) (Article, error) {
+func (q *Queries) CreateArticle(ctx context.Context, arg CreateArticleParams) (Article, error) {
 	row := q.db.QueryRowContext(ctx, createArticle, arg.Title, arg.Content)
 	var i Article
 	err := row.Scan(

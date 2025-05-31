@@ -11,7 +11,7 @@ import (
 func ArticleRouter () *http.ServeMux {
 	mux := http.NewServeMux()
 
-	mux.HandleFunc(" POST /articles", handlers.ApiConfig.CreateArticle)
+	mux.HandleFunc("POST /", handlers.ApiConfig.CreateArticle)
 
 	return mux
 }

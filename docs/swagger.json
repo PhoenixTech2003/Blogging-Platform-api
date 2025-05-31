@@ -7,9 +7,9 @@
         "version": "1.0"
     },
     "host": "localhost:8081",
-    "basePath": "/",
+    "basePath": "/v1/api",
     "paths": {
-        "/articles": {
+        "/articles/": {
             "post": {
                 "description": "Create a new article with the provided title and content",
                 "consumes": [
@@ -19,7 +19,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "articles"
+                    "Articles"
                 ],
                 "summary": "Create a new article",
                 "parameters": [
@@ -38,6 +38,12 @@
                         "description": "Article created",
                         "schema": {
                             "$ref": "#/definitions/handlers.createArticleResponseBody"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.createArticleResponseError"
                         }
                     }
                 }
@@ -72,6 +78,14 @@
                     "type": "string"
                 },
                 "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "handlers.createArticleResponseError": {
+            "type": "object",
+            "properties": {
+                "message": {
                     "type": "string"
                 }
             }

@@ -26,5 +26,6 @@ func init(){
 		return
 	}
 	ApiConfig.db = database.New(db)
+	
 
 }

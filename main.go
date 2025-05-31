@@ -22,7 +22,7 @@ import (
 // @version 1.0
 // @description A RESTful API for a blogging platform
 // @host localhost:8081
-// @BasePath /
+// @BasePath /v1/api
 
 func main() {
 	godotenv.Load()
@@ -34,7 +34,7 @@ func main() {
 		httpSwagger.URL(fmt.Sprintf("%v/swagger/doc.json", baseURL)), // The url pointing to API definition
 	))
 
-	mux.Handle("/articles/", http.StripPrefix("/articles", router.ArticleRouter()))
+	mux.Handle("/v1/api/articles/", http.StripPrefix("/v1/api/articles", router.ArticleRouter()))
 
 	addr := ":8081"
 	server := http.Server{

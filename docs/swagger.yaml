@@ -1,4 +1,4 @@
-basePath: /
+basePath: /v1/api
 definitions:
   handlers.createArticleRequestBody:
     properties:
@@ -20,6 +20,11 @@ definitions:
       updated_at:
         type: string
     type: object
+  handlers.createArticleResponseError:
+    properties:
+      message:
+        type: string
+    type: object
 host: localhost:8081
 info:
   contact: {}
@@ -27,7 +32,7 @@ info:
   title: Blogging Platform API
   version: "1.0"
 paths:
-  /articles:
+  /articles/:
     post:
       consumes:
       - application/json
@@ -46,7 +51,11 @@ paths:
           description: Article created
           schema:
             $ref: '#/definitions/handlers.createArticleResponseBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.createArticleResponseError'
       summary: Create a new article
       tags:
-      - articles
+      - Articles
 swagger: "2.0"
