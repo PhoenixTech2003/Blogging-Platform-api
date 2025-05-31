@@ -16,11 +16,9 @@ type ApiCfg struct {
 var ApiConfig ApiCfg
 
 func init() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("An error occured while loading environment variables")
-		return
-	}
+
+	_ = godotenv.Load()
+
 	dbURL := os.Getenv("DATABASE_URL")
 	db, err := sql.Open("postgres", dbURL)
 	if err != nil {
