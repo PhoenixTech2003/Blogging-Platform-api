@@ -1,4 +1,30 @@
-basePath: /
+basePath: /v1/api
+definitions:
+  handlers.createArticleRequestBody:
+    properties:
+      content:
+        type: string
+      title:
+        type: string
+    type: object
+  handlers.createArticleResponseBody:
+    properties:
+      content:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: string
+      title:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  handlers.createArticleResponseError:
+    properties:
+      message:
+        type: string
+    type: object
 host: localhost:8081
 info:
   contact: {}
@@ -6,17 +32,30 @@ info:
   title: Blogging Platform API
   version: "1.0"
 paths:
-  /:
-    get:
-      description: Returns a hello world message
+  /articles/:
+    post:
+      consumes:
+      - application/json
+      description: Create a new article with the provided title and content
+      parameters:
+      - description: Article data
+        in: body
+        name: article
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.createArticleRequestBody'
       produces:
       - application/json
       responses:
-        "200":
-          description: OK
+        "201":
+          description: Article created
           schema:
-            additionalProperties:
-              type: string
-            type: object
-      summary: Home endpoint
+            $ref: '#/definitions/handlers.createArticleResponseBody'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.createArticleResponseError'
+      summary: Create a new article
+      tags:
+      - Articles
 swagger: "2.0"
