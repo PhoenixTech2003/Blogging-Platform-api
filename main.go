@@ -25,11 +25,8 @@ import (
 // @BasePath /v1/api
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("An error occured while loading environment variables")
-		return
-	}
+	_ = godotenv.Load()
+
 	baseURL := os.Getenv("BASE_URL")
 	mux := http.NewServeMux()
 
