@@ -175,11 +175,11 @@ func (cfg *ApiCfg) GetArticles(w http.ResponseWriter, r *http.Request) {
 // @Failure 500 {object} responseError "Internal server error"
 // @Failure 404 {object} responseError "Article not found"
 // @Router /articles/{articleId} [get]
-func (cfg *ApiCfg) GetArticleById(w http.ResponseWriter, r *http.Request){
+func (cfg *ApiCfg) GetArticleById(w http.ResponseWriter, r *http.Request) {
 	articleId := r.PathValue("articleId")
-	parsedUUID, err :=uuid.Parse(articleId)
+	parsedUUID, err := uuid.Parse(articleId)
 	if err != nil {
-		log.Printf("an error occured while parsing uuid of  article of Id %v: %v",articleId, err.Error())
+		log.Printf("an error occured while parsing uuid of  article of Id %v: %v", articleId, err.Error())
 		errorResponse := responseError{
 			Message: fmt.Sprintf("an error while fetching artlce of id %v", articleId),
 		}
@@ -187,18 +187,18 @@ func (cfg *ApiCfg) GetArticleById(w http.ResponseWriter, r *http.Request){
 		utils.RespondWithJson(w, errorData, http.StatusInternalServerError)
 		return
 	}
-	dat, err := cfg.db.GetArtidleByID(r.Context(),parsedUUID)
+	dat, err := cfg.db.GetArtidleByID(r.Context(), parsedUUID)
 	if err != nil {
-		if err.Error() == "sql: no rows in result set"{
-		log.Printf("an error occured while fetching  article: %v", err.Error())
-		errorResponse := responseError{
-			Message: "article not found",
+		if err.Error() == "sql: no rows in result set" {
+			log.Printf("an error occured while fetching  article: %v", err.Error())
+			errorResponse := responseError{
+				Message: "article not found",
+			}
+			errorData, _ := json.Marshal(errorResponse)
+			utils.RespondWithJson(w, errorData, http.StatusNotFound)
+			return
 		}
-		errorData, _ := json.Marshal(errorResponse)
-		utils.RespondWithJson(w, errorData, http.StatusNotFound)
-		return	
-		}
-		log.Printf("an error occured while fetching the  article of Id %v: %v",articleId, err.Error())
+		log.Printf("an error occured while fetching the  article of Id %v: %v", articleId, err.Error())
 		errorResponse := responseError{
 			Message: fmt.Sprintf("an error while fetching artlce of id %v", articleId),
 		}
@@ -207,17 +207,17 @@ func (cfg *ApiCfg) GetArticleById(w http.ResponseWriter, r *http.Request){
 		return
 	}
 
-	responseBody :=article{
-		ID: dat.ID.String(),
-		Title: dat.Title,
-		Content: dat.Content,
+	responseBody := article{
+		ID:        dat.ID.String(),
+		Title:     dat.Title,
+		Content:   dat.Content,
 		CreatedAt: dat.CreatedAt.Time,
 		UpdatedAt: dat.UpdatedAt.Time,
 	}
 
 	responseData, err := json.Marshal(responseBody)
 	if err != nil {
-		
+
 		log.Printf("an error occured while marshalling  article: %v", err.Error())
 		errorResponse := responseError{
 			Message: "an error occured while fetching article",
@@ -227,6 +227,6 @@ func (cfg *ApiCfg) GetArticleById(w http.ResponseWriter, r *http.Request){
 		return
 	}
 
-	utils.RespondWithJson(w,responseData,http.StatusOK)
-	
+	utils.RespondWithJson(w, responseData, http.StatusOK)
+
 }
