@@ -42,11 +42,11 @@ func (q *Queries) CreateArticle(ctx context.Context, arg CreateArticleParams) (A
 }
 
 const getArticles = `-- name: GetArticles :many
-SELECT id, title, content, created_at, updated_at FROM articles
+SELECT id, title, content, created_at, updated_at FROM articles WHERE title ILIKE $1
 `
 
-func (q *Queries) GetArticles(ctx context.Context) ([]Article, error) {
-	rows, err := q.db.QueryContext(ctx, getArticles)
+func (q *Queries) GetArticles(ctx context.Context, title string) ([]Article, error) {
+	rows, err := q.db.QueryContext(ctx, getArticles, title)
 	if err != nil {
 		return nil, err
 	}

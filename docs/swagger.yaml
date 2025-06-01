@@ -48,7 +48,13 @@ paths:
     get:
       consumes:
       - application/json
-      description: Fetches all blog articles
+      description: Fetches all blog articles or blog articles specified in the quer
+        field
+      parameters:
+      - description: optional search parameter
+        in: query
+        name: query
+        type: string
       produces:
       - application/json
       responses:
