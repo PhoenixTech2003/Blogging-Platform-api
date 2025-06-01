@@ -1,7 +1,8 @@
 # Blogging Platform API 📝
 
 [![Go Version](https://img.shields.io/badge/Go-1.24.3-00ADD8?style=for-the-badge&logo=go)](https://go.dev/)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
+[![Docker](https://img.shields.io/badge/Docker-Containerized-2496ED?style=for-the-badge&logo=docker)](https://www.docker.com/)
+[![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions)](https://github.com/PhoenixTech2003/Blogging-Platform-api/actions)
 [![Swagger](https://img.shields.io/badge/Swagger-API_Docs-85EA2D?style=for-the-badge&logo=swagger)](http://localhost:8081/swagger/index.html)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-336791?style=for-the-badge&logo=postgresql)](https://www.postgresql.org/)
 [![RESTful](https://img.shields.io/badge/RESTful-API-009688?style=for-the-badge&logo=fastapi)]()
@@ -46,6 +47,7 @@ A modern RESTful API for a blogging platform built with Go. This API allows you 
 
 - **Go** - Programming language
 - **PostgreSQL** - Database
+- **Docker** - Containerization
 - **Swagger** - API documentation
 - **sqlc** - SQL query generation
 - **goose** - Database migrations
