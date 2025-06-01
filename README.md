@@ -97,20 +97,7 @@ SWAGGER_HOST=localhost:8081
 
 5. Access the Swagger documentation at http://localhost:8081/swagger/index.html
 
-## 🚀 API Endpoints
 
-### Articles
-
-- **POST /v1/api/articles/** - Create a new article
-  ```json
-  {
-    "title": "My First Blog Post",
-    "content": "This is the content of my first blog post."
-  }
-  ```
-
-- **GET /v1/api/articles/** - Get all articles
-  - Optional query parameter: `?query=search-term`
 
 ## 🧪 Development
 

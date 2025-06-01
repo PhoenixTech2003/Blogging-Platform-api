@@ -48,10 +48,10 @@ paths:
     get:
       consumes:
       - application/json
-      description: Fetches all blog articles or blog articles specified in the quer
+      description: Fetches all blog articles or blog articles that  match the query
         field
       parameters:
-      - description: optional search parameter
+      - description: optional search parameter, it is case insensitive
         in: query
         name: query
         type: string
@@ -94,6 +94,31 @@ paths:
           schema:
             $ref: '#/definitions/handlers.responseError'
       summary: Create a new article
+      tags:
+      - Articles
+  /articles/{articleId}:
+    get:
+      description: Fetches an article that matches the id specified in the url
+      parameters:
+      - description: The id of the article
+        in: path
+        name: articleId
+        required: true
+        type: string
+      responses:
+        "200":
+          description: fetched article
+          schema:
+            $ref: '#/definitions/handlers.article'
+        "404":
+          description: Article not found
+          schema:
+            $ref: '#/definitions/handlers.responseError'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handlers.responseError'
+      summary: fetches article  by ID
       tags:
       - Articles
 swagger: "2.0"

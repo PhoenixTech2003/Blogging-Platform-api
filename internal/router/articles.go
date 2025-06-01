@@ -11,5 +11,6 @@ func ArticleRouter() *http.ServeMux {
 
 	mux.HandleFunc("POST /", handlers.ApiConfig.CreateArticle)
 	mux.HandleFunc("GET /", handlers.ApiConfig.GetArticles)
+	mux.HandleFunc("GET /{articleId}", handlers.ApiConfig.GetArticleById)
 	return mux
 }

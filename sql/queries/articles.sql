@@ -13,3 +13,6 @@ RETURNING *;
 
 -- name: GetArticles :many
 SELECT * FROM articles WHERE title ILIKE $1;
+
+-- name: GetArtidleByID :one
+SELECT * FROM articles WHERE id = $1; 

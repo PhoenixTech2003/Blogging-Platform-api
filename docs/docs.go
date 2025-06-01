@@ -17,7 +17,7 @@ const docTemplate = `{
     "paths": {
         "/articles/": {
             "get": {
-                "description": "Fetches all blog articles or blog articles specified in the quer field",
+                "description": "Fetches all blog articles or blog articles that  match the query field",
                 "consumes": [
                     "application/json"
                 ],
@@ -31,7 +31,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "optional search parameter",
+                        "description": "optional search parameter, it is case insensitive",
                         "name": "query",
                         "in": "query"
                     }
@@ -86,6 +86,44 @@ const docTemplate = `{
                     },
                     "500": {
                         "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.responseError"
+                        }
+                    }
+                }
+            }
+        },
+        "/articles/{articleId}": {
+            "get": {
+                "description": "Fetches an article that matches the id specified in the url",
+                "tags": [
+                    "Articles"
+                ],
+                "summary": "fetches article  by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "The id of the article",
+                        "name": "articleId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "fetched article",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.article"
+                        }
+                    },
+                    "404": {
+                        "description": "Article not found",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.responseError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
                         "schema": {
                             "$ref": "#/definitions/handlers.responseError"
                         }
