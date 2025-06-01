@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/PhoenixTech2003/Blogging-Platform-api/internal/database"
+	"github.com/google/uuid"
 
 	"github.com/PhoenixTech2003/Blogging-Platform-api/internal/utils"
 )
@@ -162,5 +163,70 @@ func (cfg *ApiCfg) GetArticles(w http.ResponseWriter, r *http.Request) {
 	}
 
 	utils.RespondWithJson(w, dat, http.StatusOK)
+
+}
+
+// GetArticleById godoc
+// @Summary fetches article  by ID
+// @Tags Articles
+// @Description Fetches an article that matches the id specified in the url
+// @Param articleId path string true "The id of the article"
+// @Success 200 {object} article "fetched article"
+// @Failure 500 {object} responseError "Internal server error"
+// @Failure 404 {object} responseError "Article not found"
+// @Router /articles/{articleId} [get]
+func (cfg *ApiCfg) GetArticleById(w http.ResponseWriter, r *http.Request) {
+	articleId := r.PathValue("articleId")
+	parsedUUID, err := uuid.Parse(articleId)
+	if err != nil {
+		log.Printf("an error occured while parsing uuid of  article of Id %v: %v", articleId, err.Error())
+		errorResponse := responseError{
+			Message: fmt.Sprintf("an error while fetching artlce of id %v", articleId),
+		}
+		errorData, _ := json.Marshal(errorResponse)
+		utils.RespondWithJson(w, errorData, http.StatusInternalServerError)
+		return
+	}
+	dat, err := cfg.db.GetArtidleByID(r.Context(), parsedUUID)
+	if err != nil {
+		if err.Error() == "sql: no rows in result set" {
+			log.Printf("an error occured while fetching  article: %v", err.Error())
+			errorResponse := responseError{
+				Message: "article not found",
+			}
+			errorData, _ := json.Marshal(errorResponse)
+			utils.RespondWithJson(w, errorData, http.StatusNotFound)
+			return
+		}
+		log.Printf("an error occured while fetching the  article of Id %v: %v", articleId, err.Error())
+		errorResponse := responseError{
+			Message: fmt.Sprintf("an error while fetching artlce of id %v", articleId),
+		}
+		errorData, _ := json.Marshal(errorResponse)
+		utils.RespondWithJson(w, errorData, http.StatusInternalServerError)
+		return
+	}
+
+	responseBody := article{
+		ID:        dat.ID.String(),
+		Title:     dat.Title,
+		Content:   dat.Content,
+		CreatedAt: dat.CreatedAt.Time,
+		UpdatedAt: dat.UpdatedAt.Time,
+	}
+
+	responseData, err := json.Marshal(responseBody)
+	if err != nil {
+
+		log.Printf("an error occured while marshalling  article: %v", err.Error())
+		errorResponse := responseError{
+			Message: "an error occured while fetching article",
+		}
+		errorData, _ := json.Marshal(errorResponse)
+		utils.RespondWithJson(w, errorData, http.StatusInternalServerError)
+		return
+	}
+
+	utils.RespondWithJson(w, responseData, http.StatusOK)
 
 }

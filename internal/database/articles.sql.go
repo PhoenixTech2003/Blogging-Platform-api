@@ -7,6 +7,8 @@ package database
 
 import (
 	"context"
+
+	"github.com/google/uuid"
 )
 
 const createArticle = `-- name: CreateArticle :one
@@ -72,4 +74,21 @@ func (q *Queries) GetArticles(ctx context.Context, title string) ([]Article, err
 		return nil, err
 	}
 	return items, nil
+}
+
+const getArtidleByID = `-- name: GetArtidleByID :one
+SELECT id, title, content, created_at, updated_at FROM articles WHERE id = $1
+`
+
+func (q *Queries) GetArtidleByID(ctx context.Context, id uuid.UUID) (Article, error) {
+	row := q.db.QueryRowContext(ctx, getArtidleByID, id)
+	var i Article
+	err := row.Scan(
+		&i.ID,
+		&i.Title,
+		&i.Content,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
 }
