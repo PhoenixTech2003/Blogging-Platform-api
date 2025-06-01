@@ -12,4 +12,4 @@ VALUES
 RETURNING *;
 
 -- name: GetArticles :many
-SELECT * FROM articles;
+SELECT * FROM articles WHERE title ILIKE $1;

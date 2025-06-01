@@ -17,7 +17,7 @@ const docTemplate = `{
     "paths": {
         "/articles/": {
             "get": {
-                "description": "Fetches all blog articles",
+                "description": "Fetches all blog articles or blog articles specified in the quer field",
                 "consumes": [
                     "application/json"
                 ],
@@ -28,6 +28,14 @@ const docTemplate = `{
                     "Articles"
                 ],
                 "summary": "Gets all articles",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "optional search parameter",
+                        "name": "query",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "All articles",

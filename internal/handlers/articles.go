@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -115,16 +116,18 @@ func (cfg *ApiCfg) CreateArticle(w http.ResponseWriter, r *http.Request) {
 
 // GetArticles godoc
 // @Summary Gets all articles
-// @Description Fetches all blog articles
+// @Description Fetches all blog articles or blog articles that  match the query field
 // @Tags Articles
+// @Param query query string false "optional search parameter, it is case insensitive"
 // @Accept json
 // @Produce json
 // @Success 200 {array} article  "All articles"
 // @Failure 500 {object} responseError "Internal Server Error"
 // @Router /articles/ [get]
 func (cfg *ApiCfg) GetArticles(w http.ResponseWriter, r *http.Request) {
+	queryParameter := r.URL.Query().Get("query")
 	articles := make([]article, 0)
-	articlesData, err := cfg.db.GetArticles(r.Context())
+	articlesData, err := cfg.db.GetArticles(r.Context(),fmt.Sprintf("%%%v%%",queryParameter))
 	if err != nil {
 		log.Printf("an error occured while fetching all articles: %v", err.Error())
 		errorResponse := responseError{
