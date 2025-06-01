@@ -127,7 +127,7 @@ func (cfg *ApiCfg) CreateArticle(w http.ResponseWriter, r *http.Request) {
 func (cfg *ApiCfg) GetArticles(w http.ResponseWriter, r *http.Request) {
 	queryParameter := r.URL.Query().Get("query")
 	articles := make([]article, 0)
-	articlesData, err := cfg.db.GetArticles(r.Context(),fmt.Sprintf("%%%v%%",queryParameter))
+	articlesData, err := cfg.db.GetArticles(r.Context(), fmt.Sprintf("%%%v%%", queryParameter))
 	if err != nil {
 		log.Printf("an error occured while fetching all articles: %v", err.Error())
 		errorResponse := responseError{
