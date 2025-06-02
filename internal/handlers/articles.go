@@ -26,7 +26,7 @@ type createArticleResponseBody struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-type responseError struct {
+type message struct {
 	Message string `json:"message"`
 }
 
@@ -46,7 +46,7 @@ type article struct {
 // @Produce json
 // @Param article body articleRequestBody true "Article data"
 // @Success 201 {object} createArticleResponseBody "Article created"
-// @Failure 500 {object} responseError "Internal Server Error"
+// @Failure 500 {object} message "Internal Server Error"
 // @Router /articles/ [post]
 func (cfg *ApiCfg) CreateArticle(w http.ResponseWriter, r *http.Request) {
 	requestBody := articleRequestBody{}
@@ -55,7 +55,7 @@ func (cfg *ApiCfg) CreateArticle(w http.ResponseWriter, r *http.Request) {
 	err := decoder.Decode(&requestBody)
 	if err != nil {
 		log.Printf("an error occured while decoding the request: %v", err.Error())
-		errorResponse := responseError{
+		errorResponse := message{
 			Message: "an error occured while creating the post",
 		}
 		dat, err := json.Marshal(errorResponse)
@@ -74,7 +74,7 @@ func (cfg *ApiCfg) CreateArticle(w http.ResponseWriter, r *http.Request) {
 	articleData, err := cfg.db.CreateArticle(r.Context(), createArticleParams)
 	if err != nil {
 		log.Printf("an error occured while creating the post: %v", err.Error())
-		errorResponse := responseError{
+		errorResponse := message{
 			Message: "an error occured while creating the post",
 		}
 		dat, err := json.Marshal(errorResponse)
@@ -98,7 +98,7 @@ func (cfg *ApiCfg) CreateArticle(w http.ResponseWriter, r *http.Request) {
 	dat, err := json.Marshal(responseBody)
 	if err != nil {
 		log.Printf("an error occured while marshalling the post: %v", err.Error())
-		errorResponse := responseError{
+		errorResponse := message{
 			Message: "an error occured while creating the post",
 		}
 		dat, err := json.Marshal(errorResponse)
@@ -123,7 +123,7 @@ func (cfg *ApiCfg) CreateArticle(w http.ResponseWriter, r *http.Request) {
 // @Accept json
 // @Produce json
 // @Success 200 {array} article  "All articles"
-// @Failure 500 {object} responseError "Internal Server Error"
+// @Failure 500 {object} message "Internal Server Error"
 // @Router /articles/ [get]
 func (cfg *ApiCfg) GetArticles(w http.ResponseWriter, r *http.Request) {
 	queryParameter := r.URL.Query().Get("query")
@@ -131,7 +131,7 @@ func (cfg *ApiCfg) GetArticles(w http.ResponseWriter, r *http.Request) {
 	articlesData, err := cfg.db.GetArticles(r.Context(), fmt.Sprintf("%%%v%%", queryParameter))
 	if err != nil {
 		log.Printf("an error occured while fetching all articles: %v", err.Error())
-		errorResponse := responseError{
+		errorResponse := message{
 			Message: "an error occured while fetching all articles",
 		}
 		errorData, _ := json.Marshal(errorResponse)
@@ -154,7 +154,7 @@ func (cfg *ApiCfg) GetArticles(w http.ResponseWriter, r *http.Request) {
 	dat, err := json.Marshal(articles)
 	if err != nil {
 		log.Printf("an error occured while marshalling all articles: %v", err.Error())
-		errorResponse := responseError{
+		errorResponse := message{
 			Message: "an error occured while fetching all articles",
 		}
 		errorData, _ := json.Marshal(errorResponse)
@@ -172,15 +172,15 @@ func (cfg *ApiCfg) GetArticles(w http.ResponseWriter, r *http.Request) {
 // @Description Fetches an article that matches the id specified in the url
 // @Param articleId path string true "The id of the article"
 // @Success 200 {object} article "fetched article"
-// @Failure 500 {object} responseError "Internal server error"
-// @Failure 404 {object} responseError "Article not found"
+// @Failure 500 {object} message "Internal server error"
+// @Failure 404 {object} message "Article not found"
 // @Router /articles/{articleId} [get]
 func (cfg *ApiCfg) GetArticleById(w http.ResponseWriter, r *http.Request) {
 	articleId := r.PathValue("articleId")
 	parsedUUID, err := uuid.Parse(articleId)
 	if err != nil {
 		log.Printf("an error occured while parsing uuid of  article of Id %v: %v", articleId, err.Error())
-		errorResponse := responseError{
+		errorResponse := message{
 			Message: fmt.Sprintf("an error while fetching artlce of id %v", articleId),
 		}
 		errorData, _ := json.Marshal(errorResponse)
@@ -191,7 +191,7 @@ func (cfg *ApiCfg) GetArticleById(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		if err.Error() == "sql: no rows in result set" {
 			log.Printf("an error occured while fetching  article: %v", err.Error())
-			errorResponse := responseError{
+			errorResponse := message{
 				Message: "article not found",
 			}
 			errorData, _ := json.Marshal(errorResponse)
@@ -199,7 +199,7 @@ func (cfg *ApiCfg) GetArticleById(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		log.Printf("an error occured while fetching the  article of Id %v: %v", articleId, err.Error())
-		errorResponse := responseError{
+		errorResponse := message{
 			Message: fmt.Sprintf("an error while fetching artlce of id %v", articleId),
 		}
 		errorData, _ := json.Marshal(errorResponse)
@@ -219,7 +219,7 @@ func (cfg *ApiCfg) GetArticleById(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 
 		log.Printf("an error occured while marshalling  article: %v", err.Error())
-		errorResponse := responseError{
+		errorResponse := message{
 			Message: "an error occured while fetching article",
 		}
 		errorData, _ := json.Marshal(errorResponse)
@@ -240,16 +240,16 @@ func (cfg *ApiCfg) GetArticleById(w http.ResponseWriter, r *http.Request) {
 // @Accept json
 // @Produce json
 // @Success 200  {object} article "Article updated"
-// @Failure 404 {object} responseError "Article not found"
-// @Failure 500 {object} responseError "Internal server error"
+// @Failure 404 {object} message "Article not found"
+// @Failure 500 {object} message "Internal server error"
 // @Router /articles/{articleId} [put]
 func (cfg *ApiCfg) UpdateArticle(w http.ResponseWriter, r *http.Request) {
 	articleId := r.PathValue("articleId")
 	parsedUUID, err := uuid.Parse(articleId)
 	if err != nil {
 		log.Printf("an error occured while parsing uuid of  article of Id %v: %v", articleId, err.Error())
-		errorResponse := responseError{
-			Message: fmt.Sprintf("an error while fetching artlce of id %v", articleId),
+		errorResponse := message{
+			Message: fmt.Sprintf("an error while updating artlce of id %v", articleId),
 		}
 		errorData, _ := json.Marshal(errorResponse)
 		utils.RespondWithJson(w, errorData, http.StatusInternalServerError)
@@ -261,7 +261,7 @@ func (cfg *ApiCfg) UpdateArticle(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 
 		log.Printf("an error occured while decoding  article params: %v", err.Error())
-		errorResponse := responseError{
+		errorResponse := message{
 			Message: "an error occured while updating the article",
 		}
 		errorData, _ := json.Marshal(errorResponse)
@@ -277,7 +277,7 @@ func (cfg *ApiCfg) UpdateArticle(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		if err.Error() == "sql: no rows in result set" {
 			log.Printf("an error occured while updating  article: %v", err.Error())
-			errorResponse := responseError{
+			errorResponse := message{
 				Message: "article not found",
 			}
 			errorData, _ := json.Marshal(errorResponse)
@@ -285,7 +285,7 @@ func (cfg *ApiCfg) UpdateArticle(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		log.Printf("an error occured while updating the  article of Id %v: %v", articleId, err.Error())
-		errorResponse := responseError{
+		errorResponse := message{
 			Message: fmt.Sprintf("an error while updating artlce of id %v", articleId),
 		}
 		errorData, _ := json.Marshal(errorResponse)
@@ -305,8 +305,71 @@ func (cfg *ApiCfg) UpdateArticle(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 
 		log.Printf("an error occured while marshalling  article: %v", err.Error())
-		errorResponse := responseError{
+		errorResponse := message{
 			Message: "an error occured while updating article",
+		}
+		errorData, _ := json.Marshal(errorResponse)
+		utils.RespondWithJson(w, errorData, http.StatusInternalServerError)
+		return
+	}
+
+	utils.RespondWithJson(w, responseData, http.StatusOK)
+
+}
+
+// DeletArticle godoc
+// @Summary Deletes an article that has the specified id
+// @Description Deletes the article by deleting the article with the specified articleId
+// @Tags Articles
+// @Param articleId path string true "The id of the target article"
+// @Accept json
+// @Produce json
+// @Success 200  {object} message "Article deleted"
+// @Failure 404 {object} message "Article not found"
+// @Failure 500 {object} message "Internal server error"
+// @Router /articles/{articleId} [delete]
+func (cfg *ApiCfg) DeleteArticle(w http.ResponseWriter, r *http.Request) {
+	articleId := r.PathValue("articleId")
+	parsedUUID, err := uuid.Parse(articleId)
+	if err != nil {
+		log.Printf("an error occured while parsing uuid of  article of Id %v: %v", articleId, err.Error())
+		errorResponse := message{
+			Message: fmt.Sprintf("an error while deleting artlce of id %v", articleId),
+		}
+		errorData, _ := json.Marshal(errorResponse)
+		utils.RespondWithJson(w, errorData, http.StatusInternalServerError)
+		return
+	}
+	dat, err := cfg.db.DeleteArticle(r.Context(), parsedUUID)
+	if err != nil {
+		if err.Error() == "sql: no rows in result set" {
+			log.Printf("an error occured while deleting  article: %v", err.Error())
+			errorResponse := message{
+				Message: "article not found",
+			}
+			errorData, _ := json.Marshal(errorResponse)
+			utils.RespondWithJson(w, errorData, http.StatusNotFound)
+			return
+		}
+		log.Printf("an error occured while deleting the  article of Id %v: %v", articleId, err.Error())
+		errorResponse := message{
+			Message: fmt.Sprintf("an error while deleting artlce of id %v", articleId),
+		}
+		errorData, _ := json.Marshal(errorResponse)
+		utils.RespondWithJson(w, errorData, http.StatusInternalServerError)
+		return
+	}
+
+	responseBody := message{
+		Message: fmt.Sprintf("Article '%v' has been deleted successfully", dat.Title),
+	}
+
+	responseData, err := json.Marshal(responseBody)
+	if err != nil {
+
+		log.Printf("an error occured while marshalling  article: %v", err.Error())
+		errorResponse := message{
+			Message: "an error occured while deleting article",
 		}
 		errorData, _ := json.Marshal(errorResponse)
 		utils.RespondWithJson(w, errorData, http.StatusInternalServerError)

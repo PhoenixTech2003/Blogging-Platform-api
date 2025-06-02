@@ -43,6 +43,24 @@ func (q *Queries) CreateArticle(ctx context.Context, arg CreateArticleParams) (A
 	return i, err
 }
 
+const deleteArticle = `-- name: DeleteArticle :one
+DELETE FROM articles WHERE id = $1
+RETURNING id, title, content, created_at, updated_at
+`
+
+func (q *Queries) DeleteArticle(ctx context.Context, id uuid.UUID) (Article, error) {
+	row := q.db.QueryRowContext(ctx, deleteArticle, id)
+	var i Article
+	err := row.Scan(
+		&i.ID,
+		&i.Title,
+		&i.Content,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
 const getArticles = `-- name: GetArticles :many
 SELECT id, title, content, created_at, updated_at FROM articles WHERE title ILIKE $1
 `

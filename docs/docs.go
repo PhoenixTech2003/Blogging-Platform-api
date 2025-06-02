@@ -49,7 +49,7 @@ const docTemplate = `{
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/handlers.responseError"
+                            "$ref": "#/definitions/handlers.message"
                         }
                     }
                 }
@@ -87,7 +87,7 @@ const docTemplate = `{
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/handlers.responseError"
+                            "$ref": "#/definitions/handlers.message"
                         }
                     }
                 }
@@ -119,13 +119,13 @@ const docTemplate = `{
                     "404": {
                         "description": "Article not found",
                         "schema": {
-                            "$ref": "#/definitions/handlers.responseError"
+                            "$ref": "#/definitions/handlers.message"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/handlers.responseError"
+                            "$ref": "#/definitions/handlers.message"
                         }
                     }
                 }
@@ -170,13 +170,55 @@ const docTemplate = `{
                     "404": {
                         "description": "Article not found",
                         "schema": {
-                            "$ref": "#/definitions/handlers.responseError"
+                            "$ref": "#/definitions/handlers.message"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/handlers.responseError"
+                            "$ref": "#/definitions/handlers.message"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Deletes the article by deleting the article with the specified articleId",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Articles"
+                ],
+                "summary": "Deletes an article that has the specified id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "The id of the target article",
+                        "name": "articleId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Article deleted",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.message"
+                        }
+                    },
+                    "404": {
+                        "description": "Article not found",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.message"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.message"
                         }
                     }
                 }
@@ -235,7 +277,7 @@ const docTemplate = `{
                 }
             }
         },
-        "handlers.responseError": {
+        "handlers.message": {
             "type": "object",
             "properties": {
                 "message": {
