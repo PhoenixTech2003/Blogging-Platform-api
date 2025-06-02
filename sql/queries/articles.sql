@@ -25,5 +25,6 @@ updated_at = NOW()
 WHERE id = $3
 RETURNING *;
 
--- name: DeleteArticle :exec
-DELETE FROM articles WHERE id = $1;
+-- name: DeleteArticle :one
+DELETE FROM articles WHERE id = $1
+RETURNING *;

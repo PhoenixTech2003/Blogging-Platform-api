@@ -33,7 +33,7 @@ definitions:
       updated_at:
         type: string
     type: object
-  handlers.responseError:
+  handlers.message:
     properties:
       message:
         type: string
@@ -67,7 +67,7 @@ paths:
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/handlers.responseError'
+            $ref: '#/definitions/handlers.message'
       summary: Gets all articles
       tags:
       - Articles
@@ -92,11 +92,40 @@ paths:
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/handlers.responseError'
+            $ref: '#/definitions/handlers.message'
       summary: Create a new article
       tags:
       - Articles
   /articles/{articleId}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes the article by deleting the article with the specified
+        articleId
+      parameters:
+      - description: The id of the target article
+        in: path
+        name: articleId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Article deleted
+          schema:
+            $ref: '#/definitions/handlers.message'
+        "404":
+          description: Article not found
+          schema:
+            $ref: '#/definitions/handlers.message'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handlers.message'
+      summary: Deletes an article that has the specified id
+      tags:
+      - Articles
     get:
       description: Fetches an article that matches the id specified in the url
       parameters:
@@ -113,11 +142,11 @@ paths:
         "404":
           description: Article not found
           schema:
-            $ref: '#/definitions/handlers.responseError'
+            $ref: '#/definitions/handlers.message'
         "500":
           description: Internal server error
           schema:
-            $ref: '#/definitions/handlers.responseError'
+            $ref: '#/definitions/handlers.message'
       summary: fetches article  by ID
       tags:
       - Articles
@@ -149,11 +178,11 @@ paths:
         "404":
           description: Article not found
           schema:
-            $ref: '#/definitions/handlers.responseError'
+            $ref: '#/definitions/handlers.message'
         "500":
           description: Internal server error
           schema:
-            $ref: '#/definitions/handlers.responseError'
+            $ref: '#/definitions/handlers.message'
       summary: Updates an article that has the specified id
       tags:
       - Articles

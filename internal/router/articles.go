@@ -13,5 +13,6 @@ func ArticleRouter() *http.ServeMux {
 	mux.HandleFunc("GET /", handlers.ApiConfig.GetArticles)
 	mux.HandleFunc("GET /{articleId}", handlers.ApiConfig.GetArticleById)
 	mux.HandleFunc("PUT /{articleId}", handlers.ApiConfig.UpdateArticle)
+	mux.HandleFunc("DELETE /{articleId}", handlers.ApiConfig.DeleteArticle)
 	return mux
 }
