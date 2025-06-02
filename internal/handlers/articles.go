@@ -269,9 +269,9 @@ func (cfg *ApiCfg) UpdateArticle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	updateArticleParams := database.UpdateArticleParams{
-		Title: requestParams.Title,
+		Title:   requestParams.Title,
 		Content: requestParams.Content,
-		ID: parsedUUID,
+		ID:      parsedUUID,
 	}
 	dat, err := cfg.db.UpdateArticle(r.Context(), updateArticleParams)
 	if err != nil {
