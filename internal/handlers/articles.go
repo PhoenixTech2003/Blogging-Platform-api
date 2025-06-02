@@ -361,7 +361,7 @@ func (cfg *ApiCfg) DeleteArticle(w http.ResponseWriter, r *http.Request) {
 	}
 
 	responseBody := message{
-		Message: fmt.Sprintf("Article '%v' has been deleted successfully",dat.Title),
+		Message: fmt.Sprintf("Article '%v' has been deleted successfully", dat.Title),
 	}
 
 	responseData, err := json.Marshal(responseBody)
