@@ -16,3 +16,11 @@ SELECT * FROM articles WHERE title ILIKE $1;
 
 -- name: GetArtidleByID :one
 SELECT * FROM articles WHERE id = $1; 
+
+-- name: UpdateArticle :one
+UPDATE articles SET
+title= $1,
+content=$2,
+updated_at = NOW()
+WHERE id = $3
+RETURNING *;

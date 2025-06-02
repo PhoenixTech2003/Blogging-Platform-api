@@ -92,3 +92,31 @@ func (q *Queries) GetArtidleByID(ctx context.Context, id uuid.UUID) (Article, er
 	)
 	return i, err
 }
+
+const updateArticle = `-- name: UpdateArticle :one
+UPDATE articles SET
+title= $1,
+content=$2,
+updated_at = NOW()
+WHERE id = $3
+RETURNING id, title, content, created_at, updated_at
+`
+
+type UpdateArticleParams struct {
+	Title   string
+	Content string
+	ID      uuid.UUID
+}
+
+func (q *Queries) UpdateArticle(ctx context.Context, arg UpdateArticleParams) (Article, error) {
+	row := q.db.QueryRowContext(ctx, updateArticle, arg.Title, arg.Content, arg.ID)
+	var i Article
+	err := row.Scan(
+		&i.ID,
+		&i.Title,
+		&i.Content,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
