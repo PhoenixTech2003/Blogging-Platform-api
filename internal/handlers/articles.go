@@ -13,7 +13,7 @@ import (
 	"github.com/PhoenixTech2003/Blogging-Platform-api/internal/utils"
 )
 
-type createArticleRequestBody struct {
+type articleRequestBody struct {
 	Title   string `json:"title"`
 	Content string `json:"content"`
 }
@@ -44,12 +44,12 @@ type article struct {
 // @Tags Articles
 // @Accept json
 // @Produce json
-// @Param article body createArticleRequestBody true "Article data"
+// @Param article body articleRequestBody true "Article data"
 // @Success 201 {object} createArticleResponseBody "Article created"
 // @Failure 500 {object} responseError "Internal Server Error"
 // @Router /articles/ [post]
 func (cfg *ApiCfg) CreateArticle(w http.ResponseWriter, r *http.Request) {
-	requestBody := createArticleRequestBody{}
+	requestBody := articleRequestBody{}
 	decoder := json.NewDecoder(r.Body)
 
 	err := decoder.Decode(&requestBody)
@@ -221,6 +221,92 @@ func (cfg *ApiCfg) GetArticleById(w http.ResponseWriter, r *http.Request) {
 		log.Printf("an error occured while marshalling  article: %v", err.Error())
 		errorResponse := responseError{
 			Message: "an error occured while fetching article",
+		}
+		errorData, _ := json.Marshal(errorResponse)
+		utils.RespondWithJson(w, errorData, http.StatusInternalServerError)
+		return
+	}
+
+	utils.RespondWithJson(w, responseData, http.StatusOK)
+
+}
+
+// UpdateArticle godoc
+// @Summary Updates an article that has the specified id
+// @Description Updates the article with the title and content values that have been specified, by selecting the article with the specified articleId
+// @Tags Articles
+// @Param articleId path string true "The id of the target article"
+// @Param data body articleRequestBody true "This is the request body containing the fields to be used to update the article"
+// @Accept json
+// @Produce json
+// @Success 200  {object} article "Article updated"
+// @Failure 404 {object} responseError "Article not found"
+// @Failure 500 {object} responseError "Internal server error"
+// @Router /articles/{articleId} [put]
+func (cfg *ApiCfg) UpdateArticle(w http.ResponseWriter, r *http.Request) {
+	articleId := r.PathValue("articleId")
+	parsedUUID, err := uuid.Parse(articleId)
+	if err != nil {
+		log.Printf("an error occured while parsing uuid of  article of Id %v: %v", articleId, err.Error())
+		errorResponse := responseError{
+			Message: fmt.Sprintf("an error while fetching artlce of id %v", articleId),
+		}
+		errorData, _ := json.Marshal(errorResponse)
+		utils.RespondWithJson(w, errorData, http.StatusInternalServerError)
+		return
+	}
+	requestParams := articleRequestBody{}
+	decoder := json.NewDecoder(r.Body)
+	err = decoder.Decode(&requestParams)
+	if err != nil {
+
+		log.Printf("an error occured while decoding  article params: %v", err.Error())
+		errorResponse := responseError{
+			Message: "an error occured while updating the article",
+		}
+		errorData, _ := json.Marshal(errorResponse)
+		utils.RespondWithJson(w, errorData, http.StatusInternalServerError)
+		return
+	}
+	updateArticleParams := database.UpdateArticleParams{
+		Title: requestParams.Title,
+		Content: requestParams.Content,
+		ID: parsedUUID,
+	}
+	dat, err := cfg.db.UpdateArticle(r.Context(), updateArticleParams)
+	if err != nil {
+		if err.Error() == "sql: no rows in result set" {
+			log.Printf("an error occured while updating  article: %v", err.Error())
+			errorResponse := responseError{
+				Message: "article not found",
+			}
+			errorData, _ := json.Marshal(errorResponse)
+			utils.RespondWithJson(w, errorData, http.StatusNotFound)
+			return
+		}
+		log.Printf("an error occured while updating the  article of Id %v: %v", articleId, err.Error())
+		errorResponse := responseError{
+			Message: fmt.Sprintf("an error while updating artlce of id %v", articleId),
+		}
+		errorData, _ := json.Marshal(errorResponse)
+		utils.RespondWithJson(w, errorData, http.StatusInternalServerError)
+		return
+	}
+
+	responseBody := article{
+		ID:        dat.ID.String(),
+		Title:     dat.Title,
+		Content:   dat.Content,
+		CreatedAt: dat.CreatedAt.Time,
+		UpdatedAt: dat.UpdatedAt.Time,
+	}
+
+	responseData, err := json.Marshal(responseBody)
+	if err != nil {
+
+		log.Printf("an error occured while marshalling  article: %v", err.Error())
+		errorResponse := responseError{
+			Message: "an error occured while updating article",
 		}
 		errorData, _ := json.Marshal(errorResponse)
 		utils.RespondWithJson(w, errorData, http.StatusInternalServerError)

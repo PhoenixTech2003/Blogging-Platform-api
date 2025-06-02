@@ -66,7 +66,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/handlers.createArticleRequestBody"
+                            "$ref": "#/definitions/handlers.articleRequestBody"
                         }
                     }
                 ],
@@ -122,6 +122,57 @@
                         }
                     }
                 }
+            },
+            "put": {
+                "description": "Updates the article with the title and content values that have been specified, by selecting the article with the specified articleId",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Articles"
+                ],
+                "summary": "Updates an article that has the specified id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "The id of the target article",
+                        "name": "articleId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "This is the request body containing the fields to be used to update the article",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.articleRequestBody"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Article updated",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.article"
+                        }
+                    },
+                    "404": {
+                        "description": "Article not found",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.responseError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.responseError"
+                        }
+                    }
+                }
             }
         }
     },
@@ -146,7 +197,7 @@
                 }
             }
         },
-        "handlers.createArticleRequestBody": {
+        "handlers.articleRequestBody": {
             "type": "object",
             "properties": {
                 "content": {
